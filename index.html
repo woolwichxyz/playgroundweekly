@@ -1,0 +1,394 @@
+﻿Here is an HTML document that creates a landing page with four video demo slots, each linking to its respective playable WebGL page hosted on GitHub.
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Playground Weekly | Interactive 3D & Game DLC Showcase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0a0c12 0%, #0f111a 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            color: #eef2ff;
+            line-height: 1.5;
+            padding: 2rem 1.5rem;
+        }
+
+        /* smooth scroll & nice focus */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* header section */
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 1rem 0.5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.2);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(99, 102, 241, 0.5);
+            border-radius: 100px;
+            padding: 0.35rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            color: #a5b4fc;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff, #c4b5fd, #818cf8);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .tagline {
+            font-size: 1.25rem;
+            color: #9ca3af;
+            max-width: 650px;
+            margin: 0 auto;
+            font-weight: 450;
+        }
+
+        .divider {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #4f46e5, #a855f7);
+            border-radius: 4px;
+            margin: 1.5rem auto 0;
+        }
+
+        /* grid slots - 4 card layout */
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0 4rem;
+        }
+
+        /* card style */
+        .demo-card {
+            background: rgba(18, 22, 35, 0.75);
+            backdrop-filter: blur(8px);
+            border-radius: 2rem;
+            border: 1px solid rgba(71, 85, 105, 0.4);
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.3s ease;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(139, 148, 244, 0.6);
+            box-shadow: 0 28px 40px -16px rgba(79, 70, 229, 0.25);
+        }
+
+        /* video wrapper - 16:9 ratio */
+        .video-wrapper {
+            position: relative;
+            background: #000000;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(71, 85, 105, 0.5);
+        }
+
+        .demo-video {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .demo-card:hover .demo-video {
+            transform: scale(1.02);
+        }
+
+        /* placeholder fallback style (if video fails) */
+        .video-fallback {
+            background: #11141f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 16 / 9;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        /* card content */
+        .card-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .week-badge {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: #818cf8;
+            background: rgba(99, 102, 241, 0.2);
+            display: inline-block;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            width: fit-content;
+            margin-bottom: 0.75rem;
+        }
+
+        .demo-title {
+            font-size: 1.55rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+            letter-spacing: -0.3px;
+            background: linear-gradient(120deg, #f0f3ff, #cbd5ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .demo-desc {
+            color: #b9c3db;
+            font-size: 0.9rem;
+            margin: 0.6rem 0 1.2rem;
+            flex: 1;
+        }
+
+        /* CTA link — opens GitHub Pages (embedded WebGL page) */
+        .play-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            background: linear-gradient(95deg, #2d3180, #4f46e5);
+            padding: 0.7rem 1.2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: white;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(165, 180, 252, 0.4);
+            margin-top: 0.5rem;
+            width: fit-content;
+        }
+
+        .play-link:hover {
+            background: linear-gradient(95deg, #3b3f9e, #6366f1);
+            transform: scale(0.98);
+            box-shadow: 0 5px 12px rgba(79, 70, 229, 0.4);
+            border-color: #a5b4fc;
+        }
+
+        .play-link span {
+            transition: transform 0.2s;
+        }
+
+        .play-link:hover span {
+            transform: translateX(4px);
+        }
+
+        .arrow-icon {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        /* footer and info */
+        .info-note {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(71, 85, 105, 0.3);
+            backdrop-filter: blur(4px);
+        }
+
+        .info-note p {
+            color: #b9c3db;
+            font-size: 0.9rem;
+        }
+
+        .github-corner {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #0f111a;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            margin-top: 0.8rem;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .github-corner:hover {
+            background: #1e243b;
+            color: white;
+        }
+
+        hr {
+            border-color: rgba(71, 85, 105, 0.3);
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 720px) {
+            body {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 2.3rem;
+            }
+            .tagline {
+                font-size: 1rem;
+            }
+            .demo-title {
+                font-size: 1.35rem;
+            }
+            .showcase-grid {
+                gap: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- hero section -->
+    <div class="hero">
+        <div class="badge">✨ interactive 3D showcase ✨</div>
+        <h1>Playground Weekly</h1>
+        <div class="tagline">
+            New immersive 3D scene & game DLC every week.<br>
+            Watch the trailer, then jump into the live WebGL demo.
+        </div>
+        <div class="divider"></div>
+    </div>
+
+    <!-- 4 showcase slots: each with demo video + link to embedded WebGL (GitHub Pages) -->
+    <div class="showcase-grid">
+        
+        <!-- SLOT 1: Cyber Alley - Scene of Week 1 -->
+        <div class="demo-card">
+            <div class="video-wrapper">
+                <video class="demo-video" poster="https://placehold.co/640x360/1e1a3a/818cf8?text=Cyber+Alley+Preview" muted playsinline loop preload="metadata">
+                    <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+                    <!-- fallback text if video fails -->
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="card-content">
+                <span class="week-badge">🌆 WEEK 1 · 3D SCENE</span>
+                <h2 class="demo-title">Neon Alley Drifter</h2>
+                <p class="demo-desc">Rain-soaked cyberpunk alley with volumetric lighting, moving drones, and dynamic reflections. Explore the atmosphere — a true interactive scene.</p>
+                <a href="https://your-demo-repo.github.io/playground-weekly/neon-alley" class="play-link" target="_blank" rel="noopener noreferrer">
+                    🎮 Play WebGL Demo <span class="arrow-icon">→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- SLOT 2: Fantasy DLC preview -->
+        <div class="demo-card">
+            <div class="video-wrapper">
+                <video class="demo-video" poster="https://placehold.co/640x360/2a1e2c/c084fc?text=Frozen+Throne+DLC" muted playsinline loop preload="metadata">
+                    <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFunflies.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="card-content">
+                <span class="week-badge">❄️ WEEK 2 · GAME DLC</span>
+                <h2 class="demo-title">Frozen Throne: Lost Relics</h2>
+                <p class="demo-desc">New DLC area: ice caverns, ancient rune puzzles & a frost wyvern boss. Experience the new shader-based snow deformation in real-time.</p>
+                <a href="https://your-demo-repo.github.io/playground-weekly/frozen-dlc" class="play-link" target="_blank" rel="noopener noreferrer">
+                    🎮 Try DLC Demo <span class="arrow-icon">→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- SLOT 3: Sci-fi corridor scene -->
+        <div class="demo-card">
+            <div class="video-wrapper">
+                <video class="demo-video" poster="https://placehold.co/640x360/1b2a3a/38bdf8?text=Abyss+Station" muted playsinline loop preload="metadata">
+                    <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="card-content">
+                <span class="week-badge">🚀 WEEK 3 · 3D SCENE</span>
+                <h2 class="demo-title">Abyss Station</h2>
+                <p class="demo-desc">Deep-space research station with zero-gravity interactive panels. Fully WebGL-powered volumetric fog and real-time reflections.</p>
+                <a href="https://your-demo-repo.github.io/playground-weekly/abyss-station" class="play-link" target="_blank" rel="noopener noreferrer">
+                    🎮 Launch Scene <span class="arrow-icon">→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- SLOT 4: Cozy Village DLC / seasonal update -->
+        <div class="demo-card">
+            <div class="video-wrapper">
+                <video class="demo-video" poster="https://placehold.co/640x360/2a361c/b4f05c?text=Harvest+Festival" muted playsinline loop preload="metadata">
+                    <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="card-content">
+                <span class="week-badge">🌾 WEEK 4 · GAME DLC</span>
+                <h2 class="demo-title">Harvest Moon: Spirit Glade</h2>
+                <p class="demo-desc">New DLC expansion: magical forest, interactive critters, dynamic wind system & day-night cycle. See the new Unity shader graph foliage.</p>
+                <a href="https://your-demo-repo.github.io/playground-weekly/harvest-dlc" class="play-link" target="_blank" rel="noopener noreferrer">
+                    🎮 Play DLC Preview <span class="arrow-icon">→</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- info & how it works + github context -->
+    <div class="info-note">
+        <p>
+            ⚡ Each demo video gives you a glimpse of the interactive 3D world or DLC expansion.<br>
+            Click the <strong>"Play WebGL Demo"</strong> button to open the fully playable Unity WebGL build hosted on <strong>GitHub Pages</strong>.<br>
+            New scene or DLC added every week — all playable in your browser, no installation required.
+        </p>
+        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+            <a href="#" class="github-corner" style="pointer-events: none; opacity: 0.8;">
+                📁 GitHub repo: PlaygroundWeekly
+            </a>
+            <a href="#" class="github-corner" style="pointer-events: none; opacity: 0.8;">
+                🕹️ Built with Unity WebGL
+            </a>
+        </div>
+        <hr style="max-width: 400px; margin: 1.2rem auto;">
+        <p style="font-size: 0.8rem; color: #7e8aa8;">
+            * For the live POC, replace the example video sources with your own captured gameplay,<br>
+            and update the button links to point to your actual GitHub Pages subpages (embedded WebGL builds).
+        </p>
+    </div>
+</div>
+
+<!-- small note: real demo links would point to actual github.io hosted Unity builds -->
+<!-- This layout provides 4 distinct slots with videos and external links to full WebGL interactive pages. -->
+</body>
+</html>
+```
